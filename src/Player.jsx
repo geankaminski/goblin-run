@@ -46,7 +46,7 @@ export default function Player() {
         const hit = world.castRay(ray, 10, true)
 
         if (hit.toi < 0.15) {
-            body.current.applyImpulse({ x: 0, y: 0.3, z: 0 })
+            body.current.applyImpulse({ x: 0, y: 0.35, z: 0 })
         }
     }
 

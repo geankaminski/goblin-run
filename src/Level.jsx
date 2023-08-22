@@ -8,11 +8,16 @@ import useGame from './stores/useGame.jsx'
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
 
-const floor1Material = new THREE.MeshStandardMaterial({ color: 'limegreen' })
 const obstacleMaterial = new THREE.MeshStandardMaterial({ color: 'orangered' })
 const wallMaterial = new THREE.MeshStandardMaterial({ color: 'slategrey' })
 
 export function BlockStart({ position = [0, 0, 0] }) {
+    const treeSpruce = useGLTF('/tree-spruce.gltf')
+
+    treeSpruce.scene.traverse(function (node) {
+        if (node.isMesh) { node.castShadow = true; }
+    });
+
     const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
         'Stylized_Grass_001_basecolor.jpg',
         'Stylized_Grass_001_normal.jpg',
@@ -20,6 +25,8 @@ export function BlockStart({ position = [0, 0, 0] }) {
         'Stylized_Grass_001_ambientOcclusion.jpg',
         'Stylized_Grass_001_height.png',
     ])
+
+    const treeCount = useGame((state) => state.treeCount)
 
     return <group position={position}>
         <Float floatIntensity={0.25} rotationIntensity={0.25}>
@@ -36,6 +43,16 @@ export function BlockStart({ position = [0, 0, 0] }) {
                 <meshBasicMaterial toneMapped={false} />
             </Text>
         </Float>
+
+        {
+            [...Array(treeCount)].map((_, index) => {
+                const x = -1
+                const z = 0
+
+                return <primitive object={treeSpruce.scene} scale={0.05} position={[x, 0, z]} rotation={[0, Math.PI / 2, 0]} key={index} />
+            })
+        }
+
         <mesh position={[0, - 0.1, 0]} scale={[4, 0.2, 4]} receiveShadow>
             <boxGeometry />
             <meshStandardMaterial
@@ -54,6 +71,14 @@ export function BlockEnd({ position = [0, 0, 0] }) {
     let mixer
     let actions = []
 
+    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
+        'rock/Rock020_1K_Color.jpg',
+        'rock/Rock020_1K_Normal.jpg',
+        'rock/Rock020_1K_Roughness.jpg',
+        'rock/Rock020_1K_AmbientOcclusion.jpg',
+        'rock/Rock020_1K_Displacement.jpg',
+    ])
+
     if (korriganFemale.animations.length > 0) {
         mixer = new THREE.AnimationMixer(korriganFemale.scene)
         korriganFemale.animations.forEach((clip) => {
@@ -62,9 +87,9 @@ export function BlockEnd({ position = [0, 0, 0] }) {
         actions[0].play()
     }
 
-    korriganFemale.scene.children.forEach((mesh) => {
-        mesh.castShadow = true
-    })
+    korriganFemale.scene.traverse(function (node) {
+        if (node.isMesh) { node.castShadow = true; }
+    });
 
     useFrame((state, delta) => {
         mixer?.update(delta)
@@ -80,8 +105,21 @@ export function BlockEnd({ position = [0, 0, 0] }) {
             <meshBasicMaterial toneMapped={false} />
         </Text>
 
-        <mesh geometry={boxGeometry} material={floor1Material} position={[0, 0, 0]} scale={[4, 0.2, 4]} receiveShadow />
-        <RigidBody type="fixed" colliders="hull" position={[0, 0.25, 0]} restitution={0.2} friction={0}>
+        <RigidBody type="fixed" colliders="hull" position={[0, 0, 0]} restitution={0.2} friction={0}>
+            <mesh position={[0, 0, 0]} scale={[4, 0.2, 4]} receiveShadow>
+                <boxGeometry />
+                <meshStandardMaterial
+
+                    map={colorMap}
+                    normalMap={normalMap}
+                    roughnessMap={roughnessMap}
+                    aoMap={aoMap}
+
+                />
+            </mesh>
+        </RigidBody>
+
+        <RigidBody colliders="hull" position={[0, 0, 0]} restitution={0.2} friction={0}>
             <primitive object={korriganFemale.scene} scale={1} />
         </RigidBody>
     </group>
