@@ -10,7 +10,7 @@ export default function Player() {
     const body = useRef()
     const primitive = useRef()
 
-    const korrigan = useLoader(GLTFLoader, './korrigan-hat.gltf')
+    const korrigan = useLoader(GLTFLoader, '/models/korrigan-hat.gltf')
     let mixer
     let actions = []
     if (korrigan.animations.length > 0) {

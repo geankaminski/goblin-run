@@ -12,18 +12,18 @@ const obstacleMaterial = new THREE.MeshStandardMaterial({ color: 'orangered' })
 const wallMaterial = new THREE.MeshStandardMaterial({ color: 'slategrey' })
 
 export function BlockStart({ position = [0, 0, 0] }) {
-    const treeSpruce = useGLTF('/tree-spruce.gltf')
+    const treeSpruce = useGLTF('/models/tree-spruce.gltf')
 
     treeSpruce.scene.traverse(function (node) {
         if (node.isMesh) { node.castShadow = true; }
     });
 
     const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
-        'Stylized_Grass_001_basecolor.jpg',
-        'Stylized_Grass_001_normal.jpg',
-        'Stylized_Grass_001_roughness.jpg',
-        'Stylized_Grass_001_ambientOcclusion.jpg',
-        'Stylized_Grass_001_height.png',
+        'grass/Stylized_Grass_001_basecolor.jpg',
+        'grass/Stylized_Grass_001_normal.jpg',
+        'grass/Stylized_Grass_001_roughness.jpg',
+        'grass/Stylized_Grass_001_ambientOcclusion.jpg',
+        'grass/Stylized_Grass_001_height.png',
     ])
 
     const treeCount = useGame((state) => state.treeCount)
@@ -67,7 +67,7 @@ export function BlockStart({ position = [0, 0, 0] }) {
 }
 
 export function BlockEnd({ position = [0, 0, 0] }) {
-    const korriganFemale = useGLTF('/korrigan-taning.gltf')
+    const korriganFemale = useGLTF('/models/korrigan-taning.gltf')
     let mixer
     let actions = []
 
@@ -127,11 +127,11 @@ export function BlockEnd({ position = [0, 0, 0] }) {
 
 export function BlockSpinner({ position = [0, 0, 0] }) {
     const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
-        'Stylized_Grass_001_basecolor.jpg',
-        'Stylized_Grass_001_normal.jpg',
-        'Stylized_Grass_001_roughness.jpg',
-        'Stylized_Grass_001_ambientOcclusion.jpg',
-        'Stylized_Grass_001_height.png',
+        'grass/Stylized_Grass_001_basecolor.jpg',
+        'grass/Stylized_Grass_001_normal.jpg',
+        'grass/Stylized_Grass_001_roughness.jpg',
+        'grass/Stylized_Grass_001_ambientOcclusion.jpg',
+        'grass/Stylized_Grass_001_height.png',
     ])
 
     const obstacle = useRef()
@@ -171,11 +171,11 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
 
 export function BlockLimbo({ position = [0, 0, 0] }) {
     const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
-        'Stylized_Grass_001_basecolor.jpg',
-        'Stylized_Grass_001_normal.jpg',
-        'Stylized_Grass_001_roughness.jpg',
-        'Stylized_Grass_001_ambientOcclusion.jpg',
-        'Stylized_Grass_001_height.png',
+        'grass/Stylized_Grass_001_basecolor.jpg',
+        'grass/Stylized_Grass_001_normal.jpg',
+        'grass/Stylized_Grass_001_roughness.jpg',
+        'grass/Stylized_Grass_001_ambientOcclusion.jpg',
+        'grass/Stylized_Grass_001_height.png',
     ])
 
     const obstacle = useRef()
@@ -213,11 +213,11 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
 
 export function BlockAxe({ position = [0, 0, 0] }) {
     const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
-        'Stylized_Grass_001_basecolor.jpg',
-        'Stylized_Grass_001_normal.jpg',
-        'Stylized_Grass_001_roughness.jpg',
-        'Stylized_Grass_001_ambientOcclusion.jpg',
-        'Stylized_Grass_001_height.png',
+        'grass/Stylized_Grass_001_basecolor.jpg',
+        'grass/Stylized_Grass_001_normal.jpg',
+        'grass/Stylized_Grass_001_roughness.jpg',
+        'grass/Stylized_Grass_001_ambientOcclusion.jpg',
+        'grass/Stylized_Grass_001_height.png',
     ])
 
     const obstacle = useRef()

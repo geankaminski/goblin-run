@@ -14,9 +14,9 @@ export default create(subscribeWithSelector((set) => {
         startTime: 0,
         endTime: 0,
 
-        music: new Audio('/music.mp3'),
-        winAudio: new Audio('/win.mp3'),
-        hitAudio: new Audio('/hit.mp3'),
+        music: new Audio('/audio/music.mp3'),
+        winAudio: new Audio('/audio/win.mp3'),
+        hitAudio: new Audio('/audio/hit.mp3'),
 
         /**
          * Phases
