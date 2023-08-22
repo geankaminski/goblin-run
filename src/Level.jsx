@@ -137,11 +137,17 @@ export function BlockEnd({ position = [0, 0, 0] }) {
 }
 
 export function BlockSpinner({ position = [0, 0, 0] }) {
+    const axe = useGLTF('/models/axe.gltf')
+
+    axe.scene.traverse(function (node) {
+        if (node.isMesh) { node.castShadow = true; }
+    });
+
     const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useGrassTexture()
 
     const obstacle = useRef()
     const restart = useGame((state) => state.restart)
-    const [speed] = useState(() => (Math.random() + 0.2) * (Math.random() < 0.5 ? - 1 : 1))
+    const [speed] = useState(() => (2) * (Math.random() < 0.5 ? - 1 : 1))
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime()
@@ -164,8 +170,8 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
             />
         </mesh>
 
-        <RigidBody onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
-            <mesh geometry={boxGeometry} material={obstacleMaterial} scale={[3.5, 0.3, 0.3]} castShadow receiveShadow />
+        <RigidBody onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0.2, 0]} restitution={0.2} friction={0}>
+            <primitive object={axe.scene} scale={[2.4, 2.4, 2.4]} castShadow receiveShadow rotation={[Math.PI / 2, 0, Math.PI / 2]} />
         </RigidBody>
     </group>
 }
@@ -203,11 +209,17 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
 }
 
 export function BlockAxe({ position = [0, 0, 0] }) {
+    const shield = useGLTF('/models/shield.gltf')
+
+    shield.scene.traverse(function (node) {
+        if (node.isMesh) { node.castShadow = true; }
+    });
+
     const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useGrassTexture()
 
     const obstacle = useRef()
     const restart = useGame((state) => state.restart)
-    const [timeOffset] = useState(() => Math.random() * Math.PI * 2)
+    const [timeOffset] = useState(() => Math.random() * Math.PI * 5)
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime()
@@ -228,8 +240,8 @@ export function BlockAxe({ position = [0, 0, 0] }) {
                 displacementMap={displacementMap}
             />
         </mesh>
-        <RigidBody onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
-            <mesh geometry={boxGeometry} material={obstacleMaterial} scale={[1.5, 1.5, 0.3]} castShadow receiveShadow />
+        <RigidBody onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0, 0]} restitution={0.2} friction={0}>
+            <primitive object={shield.scene} scale={[2, 2, 0.3]} castShadow receiveShadow rotation={[0, 0, 0]} position={[0, 0.2, 0]} />
         </RigidBody>
     </group>
 }
