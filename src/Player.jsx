@@ -50,7 +50,7 @@ export default function Player() {
     }
 
     const reset = () => {
-        body.current.setTranslation({ x: 0, y: 1, z: 0 })
+        body.current.setTranslation({ x: 0, y: 1.5, z: 0 })
         body.current.setLinvel({ x: 0, y: 0, z: 0 })
         body.current.setAngvel({ x: 0, y: 0, z: 0 })
         body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
