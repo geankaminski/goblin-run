@@ -11,7 +11,7 @@ export default function Experience() {
 
     return <>
 
-        <Sky distance={20000} sunPosition={[0, 1, 0]} inclination={20} azimuth={0.001} />
+        <Sky distance={4500000} sunPosition={[0, 6, 0]} inclination={0} azimuth={0.25} />
 
         <Physics debug={false}>
             <Lights />

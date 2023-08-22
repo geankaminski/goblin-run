@@ -1,15 +1,48 @@
+import { useMemo, useState, useRef } from 'react'
 import * as THREE from 'three'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
-import { useMemo, useState, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Float, Text, useGLTF } from '@react-three/drei'
-import { useTexture } from "@react-three/drei"
+import { Float, Text, useGLTF, useTexture } from '@react-three/drei'
 import useGame from './stores/useGame.jsx'
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
 
 const obstacleMaterial = new THREE.MeshStandardMaterial({ color: 'orangered' })
 const wallMaterial = new THREE.MeshStandardMaterial({ color: 'slategrey' })
+
+function useGrassTexture() {
+    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
+        'grass/Stylized_Grass_001_basecolor.jpg',
+        'grass/Stylized_Grass_001_normal.jpg',
+        'grass/Stylized_Grass_001_roughness.jpg',
+        'grass/Stylized_Grass_001_ambientOcclusion.jpg',
+        'grass/Stylized_Grass_001_height.png',
+    ]);
+
+    return [
+        colorMap,
+        normalMap,
+        roughnessMap,
+        aoMap,
+        displacementMap,
+    ];
+}
+
+function useRockTexture() {
+    const [colorMap, normalMap, roughnessMap, aoMap] = useTexture([
+        'rock/Rock020_1K_Color.jpg',
+        'rock/Rock020_1K_Normal.jpg',
+        'rock/Rock020_1K_Roughness.jpg',
+        'rock/Rock020_1K_AmbientOcclusion.jpg',
+    ]);
+
+    return [
+        colorMap,
+        normalMap,
+        roughnessMap,
+        aoMap,
+    ];
+}
 
 export function BlockStart({ position = [0, 0, 0] }) {
     const treeSpruce = useGLTF('/models/tree-spruce.gltf')
@@ -18,15 +51,7 @@ export function BlockStart({ position = [0, 0, 0] }) {
         if (node.isMesh) { node.castShadow = true; }
     });
 
-    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
-        'grass/Stylized_Grass_001_basecolor.jpg',
-        'grass/Stylized_Grass_001_normal.jpg',
-        'grass/Stylized_Grass_001_roughness.jpg',
-        'grass/Stylized_Grass_001_ambientOcclusion.jpg',
-        'grass/Stylized_Grass_001_height.png',
-    ])
-
-    const treeCount = useGame((state) => state.treeCount)
+    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useGrassTexture()
 
     return <group position={position}>
         <Float floatIntensity={0.25} rotationIntensity={0.25}>
@@ -44,14 +69,7 @@ export function BlockStart({ position = [0, 0, 0] }) {
             </Text>
         </Float>
 
-        {
-            [...Array(treeCount)].map((_, index) => {
-                const x = -1
-                const z = 0
-
-                return <primitive object={treeSpruce.scene} scale={0.05} position={[x, 0, z]} rotation={[0, Math.PI / 2, 0]} key={index} />
-            })
-        }
+        <primitive object={treeSpruce.scene} scale={0.05} position={[-1, 0, 0]} rotation={[0, Math.PI / 2, 0]} />
 
         <mesh position={[0, - 0.1, 0]} scale={[4, 0.2, 4]} receiveShadow>
             <boxGeometry />
@@ -71,13 +89,7 @@ export function BlockEnd({ position = [0, 0, 0] }) {
     let mixer
     let actions = []
 
-    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
-        'rock/Rock020_1K_Color.jpg',
-        'rock/Rock020_1K_Normal.jpg',
-        'rock/Rock020_1K_Roughness.jpg',
-        'rock/Rock020_1K_AmbientOcclusion.jpg',
-        'rock/Rock020_1K_Displacement.jpg',
-    ])
+    const [colorMap, normalMap, roughnessMap, aoMap] = useRockTexture()
 
     if (korriganFemale.animations.length > 0) {
         mixer = new THREE.AnimationMixer(korriganFemale.scene)
@@ -109,7 +121,6 @@ export function BlockEnd({ position = [0, 0, 0] }) {
             <mesh position={[0, 0, 0]} scale={[4, 0.2, 4]} receiveShadow>
                 <boxGeometry />
                 <meshStandardMaterial
-
                     map={colorMap}
                     normalMap={normalMap}
                     roughnessMap={roughnessMap}
@@ -126,13 +137,7 @@ export function BlockEnd({ position = [0, 0, 0] }) {
 }
 
 export function BlockSpinner({ position = [0, 0, 0] }) {
-    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
-        'grass/Stylized_Grass_001_basecolor.jpg',
-        'grass/Stylized_Grass_001_normal.jpg',
-        'grass/Stylized_Grass_001_roughness.jpg',
-        'grass/Stylized_Grass_001_ambientOcclusion.jpg',
-        'grass/Stylized_Grass_001_height.png',
-    ])
+    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useGrassTexture()
 
     const obstacle = useRef()
     const restart = useGame((state) => state.restart)
@@ -146,10 +151,6 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
         obstacle.current.setNextKinematicRotation(rotation)
     })
 
-    const handleContact = (payload) => {
-        restart()
-    }
-
     return <group position={position}>
         <mesh position={[0, - 0.1, 0]} scale={[4, 0.2, 4]} receiveShadow>
             <boxGeometry />
@@ -163,20 +164,14 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
             />
         </mesh>
 
-        <RigidBody onContactForce={(payload) => handleContact(payload)} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+        <RigidBody onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
             <mesh geometry={boxGeometry} material={obstacleMaterial} scale={[3.5, 0.3, 0.3]} castShadow receiveShadow />
         </RigidBody>
     </group>
 }
 
 export function BlockLimbo({ position = [0, 0, 0] }) {
-    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
-        'grass/Stylized_Grass_001_basecolor.jpg',
-        'grass/Stylized_Grass_001_normal.jpg',
-        'grass/Stylized_Grass_001_roughness.jpg',
-        'grass/Stylized_Grass_001_ambientOcclusion.jpg',
-        'grass/Stylized_Grass_001_height.png',
-    ])
+    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useGrassTexture()
 
     const obstacle = useRef()
     const restart = useGame((state) => state.restart)
@@ -189,10 +184,6 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
         obstacle.current.setNextKinematicTranslation({ x: position[0], y: position[1] + y, z: position[2] })
     })
 
-    const handleContact = (payload) => {
-        restart()
-    }
-
     return <group position={position}>
         <mesh position={[0, - 0.1, 0]} scale={[4, 0.2, 4]} receiveShadow>
             <boxGeometry />
@@ -205,20 +196,14 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
                 displacementMap={displacementMap}
             />
         </mesh>
-        <RigidBody onContactForce={(payload) => handleContact(payload)} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+        <RigidBody onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
             <mesh geometry={boxGeometry} material={obstacleMaterial} scale={[3.5, 0.3, 0.3]} castShadow receiveShadow />
         </RigidBody>
     </group>
 }
 
 export function BlockAxe({ position = [0, 0, 0] }) {
-    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useTexture([
-        'grass/Stylized_Grass_001_basecolor.jpg',
-        'grass/Stylized_Grass_001_normal.jpg',
-        'grass/Stylized_Grass_001_roughness.jpg',
-        'grass/Stylized_Grass_001_ambientOcclusion.jpg',
-        'grass/Stylized_Grass_001_height.png',
-    ])
+    const [colorMap, normalMap, roughnessMap, aoMap, displacementMap] = useGrassTexture()
 
     const obstacle = useRef()
     const restart = useGame((state) => state.restart)
@@ -231,10 +216,6 @@ export function BlockAxe({ position = [0, 0, 0] }) {
         obstacle.current.setNextKinematicTranslation({ x: position[0] + x, y: position[1] + 0.75, z: position[2] })
     })
 
-    const handleContact = (payload) => {
-        restart()
-    }
-
     return <group position={position}>
         <mesh position={[0, - 0.1, 0]} scale={[4, 0.2, 4]} receiveShadow>
             <boxGeometry />
@@ -247,36 +228,63 @@ export function BlockAxe({ position = [0, 0, 0] }) {
                 displacementMap={displacementMap}
             />
         </mesh>
-        <RigidBody onContactForce={(payload) => handleContact(payload)} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+        <RigidBody onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
             <mesh geometry={boxGeometry} material={obstacleMaterial} scale={[1.5, 1.5, 0.3]} castShadow receiveShadow />
         </RigidBody>
     </group>
 }
 
 function Bounds({ length = 1 }) {
+
+    const [colorMap, normalMap, roughnessMap, aoMap] = useRockTexture()
+
     return <>
         <RigidBody type="fixed" restitution={0.2} friction={0}>
             <mesh
                 position={[2.15, 0.75, - (length * 2) + 2]}
-                geometry={boxGeometry}
-                material={wallMaterial}
                 scale={[0.3, 1.5, 4 * length]}
-                castShadow
-            />
+                receiveShadow
+            >
+                <boxGeometry />
+                <meshStandardMaterial
+                    map={colorMap}
+                    normalMap={normalMap}
+                    roughnessMap={roughnessMap}
+                    aoMap={aoMap}
+
+                />
+            </mesh>
+
             <mesh
                 position={[- 2.15, 0.75, - (length * 2) + 2]}
-                geometry={boxGeometry}
-                material={wallMaterial}
                 scale={[0.3, 1.5, 4 * length]}
                 receiveShadow
-            />
+            >
+                <boxGeometry />
+                <meshStandardMaterial
+                    map={colorMap}
+                    normalMap={normalMap}
+                    roughnessMap={roughnessMap}
+                    aoMap={aoMap}
+
+                />
+            </mesh>
+
             <mesh
                 position={[0, 0.75, - (length * 4) + 2]}
-                geometry={boxGeometry}
-                material={wallMaterial}
                 scale={[4, 1.5, 0.3]}
                 receiveShadow
-            />
+            >
+                <boxGeometry />
+                <meshStandardMaterial
+                    map={colorMap}
+                    normalMap={normalMap}
+                    roughnessMap={roughnessMap}
+                    aoMap={aoMap}
+
+                />
+            </mesh>
+
             <CuboidCollider
                 type="fixed"
                 args={[2, 0.1, 2 * length]}
@@ -293,6 +301,7 @@ export function Level({
     types = [BlockSpinner, BlockAxe, BlockLimbo],
     seed = 0
 }) {
+
     const blocks = useMemo(() => {
         const blocks = []
 

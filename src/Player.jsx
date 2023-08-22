@@ -1,8 +1,8 @@
+import { useState, useEffect, useRef } from 'react'
+import * as THREE from 'three'
 import { useRapier, RigidBody } from '@react-three/rapier'
 import { useFrame, useLoader } from '@react-three/fiber'
 import { useKeyboardControls } from '@react-three/drei'
-import { useState, useEffect, useRef } from 'react'
-import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import useGame from './stores/useGame.jsx'
 

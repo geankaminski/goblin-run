@@ -6,7 +6,7 @@ export default create(subscribeWithSelector((set) => {
     return {
         blocksCount: 5,
         blocksSeed: 0,
-        treeCount: 2,
+        treeCount: 1,
 
         /**
          * Time
