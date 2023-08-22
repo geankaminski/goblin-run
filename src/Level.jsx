@@ -247,7 +247,6 @@ export function BlockAxe({ position = [0, 0, 0] }) {
 }
 
 function Bounds({ length = 1 }) {
-
     const [colorMap, normalMap, roughnessMap, aoMap] = useRockTexture()
 
     return <>
