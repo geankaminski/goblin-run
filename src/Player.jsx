@@ -34,7 +34,7 @@ export default function Player() {
 
     const start = useGame((state) => state.start)
     const end = useGame((state) => state.end)
-    const restart = useGame((state) => state.restart)
+    const dead = useGame((state) => state.dead)
     const blocksCount = useGame((state) => state.blocksCount)
 
     const jump = () => {
@@ -178,7 +178,7 @@ export default function Player() {
             end()
 
         if (bodyPosition.y < - 4)
-            restart()
+            dead()
     })
 
     return <RigidBody

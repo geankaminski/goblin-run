@@ -5,17 +5,11 @@ import { useFrame } from '@react-three/fiber'
 import { Float, Text, useGLTF, useTexture } from '@react-three/drei'
 import useGame from './stores/useGame.jsx'
 
-const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
-
-const obstacleMaterial = new THREE.MeshStandardMaterial({ color: 'orangered' })
-
 function useGrassTexture() {
     const [colorMap, roughnessMap, aoMap] = useTexture([
         'grass/Grass001_1K_Color.jpg',
-        //'grass/Grass001_1K_Normal.jpg',
         'grass/Grass001_1K_Roughness.jpg',
         'grass/Grass001_1K_AmbientOcclusion.jpg',
-        //'grass/Grass001_1K_Displacement.jpg',
     ]);
 
     return [
@@ -148,7 +142,7 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
     const [colorMap, roughnessMap, aoMap] = useGrassTexture()
 
     const obstacle = useRef()
-    const restart = useGame((state) => state.restart)
+    const dead = useGame((state) => state.dead)
     const [speed] = useState(() => (2.5 * (Math.random() + 1)) * (Math.random() < 0.5 ? - 1 : 1))
 
     useFrame((state) => {
@@ -169,7 +163,7 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
             />
         </mesh>
 
-        <RigidBody onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0.2, 0]} restitution={0.2} friction={0}>
+        <RigidBody onContactForce={() => dead()} ref={obstacle} type="kinematicPosition" position={[0, 0.2, 0]} restitution={0.2} friction={0}>
             <group>
                 <group rotation={[0, 0, 0]} scale={[2.4, 2.4, 2.4]}>
                     <mesh geometry={nodes.Cube014.geometry} castShadow material={materials['Metal.074']} />
@@ -187,7 +181,8 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
     const [colorMap, roughnessMap, aoMap] = useGrassTexture()
 
     const obstacle = useRef()
-    const restart = useGame((state) => state.restart)
+    const dead = useGame((state) => state.dead)
+    const blocksCount = useGame((state) => state.blocksCount)
     const [timeOffset] = useState(() => Math.random() * Math.PI * 2)
 
     useFrame((state) => {
@@ -206,13 +201,15 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
             />
         </mesh>
 
-        <RigidBody colliders="hull" onContactForce={() => restart()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
-            <Arrow />
-        </RigidBody>
+        {
+            [...Array(blocksCount)].map((_, index) => <RigidBody colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+                <Arrow />
+            </RigidBody>)
+        }
 
-        <RigidBody colliders="hull" onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+        <RigidBody colliders="hull" onContactForce={() => dead()} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
             <group>
-                <group rotation={[0, Math.PI / 2, Math.PI / 2,]} scale={[2.7, 2.7, 2.7]} position={[1, 0.378, 0]}>
+                <group rotation={[0, Math.PI / 2, Math.PI / 2,]} scale={[2.8, 2.8, 2.8]} position={[1, 0.378, 0]}>
                     <mesh geometry={nodes.Cube4152.geometry} castShadow material={materials['Metal.092']} />
                     <mesh geometry={nodes.Cube4152_1.geometry} castShadow material={materials['BrownDark.059']} />
                     <mesh geometry={nodes.Cube4152_2.geometry} castShadow material={materials['Stone.025']} />
@@ -228,7 +225,7 @@ export function BlockAxe({ position = [0, 0, 0] }) {
     const [colorMap, roughnessMap, aoMap] = useGrassTexture()
 
     const obstacle = useRef()
-    const restart = useGame((state) => state.restart)
+    const dead = useGame((state) => state.dead)
     const [timeOffset] = useState(() => Math.random() * Math.PI * 5)
 
 
@@ -248,11 +245,11 @@ export function BlockAxe({ position = [0, 0, 0] }) {
             />
         </mesh>
 
-        <RigidBody colliders="hull" onContactForce={() => restart()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+        <RigidBody colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
             <Arrow />
         </RigidBody>
 
-        <RigidBody onContactForce={() => restart()} ref={obstacle} type="kinematicPosition" position={[0, 0, 0]} restitution={0.2} friction={0}>
+        <RigidBody onContactForce={() => dead()} ref={obstacle} type="kinematicPosition" position={[0, 0, 0]} restitution={0.2} friction={0}>
             <group>
                 <group rotation={[Math.PI / 2, 0, 0]} position={[0, 0.2, 0]} scale={[2, 2, 2]}>
                     <mesh geometry={nodes.Cube4204.geometry} castShadow material={materials['Metal.099']} />

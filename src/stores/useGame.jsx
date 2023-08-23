@@ -4,9 +4,10 @@ import { subscribeWithSelector } from 'zustand/middleware'
 export default create(subscribeWithSelector((set) => {
 
     return {
-        blocksCount: 5,
+        blocksCount: 1,
+        maxBlocks: 2,
         blocksSeed: 0,
-        treeCount: 1,
+        lifes: 3,
 
         /**
          * Time
@@ -28,6 +29,21 @@ export default create(subscribeWithSelector((set) => {
                 if (state.phase === 'ready') {
                     state.music.play()
                     return { phase: 'playing', startTime: Date.now() }
+                }
+
+                return {}
+            })
+        },
+
+        dead: () => {
+            set((state) => {
+                if (state.phase === 'playing') {
+                    state.hitAudio.play()
+                    if (state.lifes > 1) {
+                        return { phase: 'ready', lifes: state.lifes - 1 }
+                    } else {
+                        return { phase: 'ready', lifes: 3, blocksCount: 1, blocksSeed: Math.random() }
+                    }
                 }
 
                 return {}

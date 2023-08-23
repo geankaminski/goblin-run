@@ -85,3 +85,24 @@ body,
 .controls .key.active {
     background: #ffffff99;
 }
+
+.lifes {
+    position: absolute;
+    width: 100%;
+    top: 16px;
+    right: -16px;
+    font-size: 3.5vh;
+    display: flex;
+    gap: 6px;
+}
+
+.level {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 3.5vh;
+    display: flex;
+    gap: 6px;
+    color: #ffffff;
+    justify-content: flex-end;
+}
