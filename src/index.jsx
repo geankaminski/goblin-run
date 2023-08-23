@@ -4,9 +4,9 @@ import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei'
 // import { Perf } from 'r3f-perf'
 import Experience from './Experience.jsx'
-import Interface from './Interface.jsx'
-// import Loader from './Loader.jsx'
-import './style.css'
+import Interface from './components/Interface.jsx'
+// import Loader from './components/Loader.jsx'
+import '/styles/style.css'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 

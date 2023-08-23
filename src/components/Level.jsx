@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber'
 import { Float, Text, useGLTF, useTexture } from '@react-three/drei'
-import useGame from './stores/useGame.jsx'
+import useGame from '../stores/useGame.jsx'
 
 function useGrassTexture() {
     const [colorMap, roughnessMap, aoMap] = useTexture([
@@ -44,7 +44,7 @@ export default function Arrow(props) {
             <group rotation={[Math.PI / 2, 0, 0,]} >
                 <mesh geometry={nodes.Cylinder001.geometry} material={materials['Metal.004']} />
                 <mesh geometry={nodes.Cylinder001_1.geometry} material={materials['BrownDark.006']} castShadow />
-                <mesh geometry={nodes.Cylinder001_2.geometry} material={materials['Blue.003']} />
+                <mesh geometry={nodes.Cylinder001_2.geometry} material={materials['Blue.003']} castShadow />
             </group>
         </group>
     )
@@ -89,27 +89,13 @@ export function BlockStart({ position = [0, 0, 0] }) {
 }
 
 export function BlockEnd({ position = [0, 0, 0] }) {
-    const korriganFemale = useGLTF('/models/korrigan-taning.gltf')
-    let mixer
-    let actions = []
+    const chest = useGLTF('/models/chest.gltf')
 
     const [colorMap] = useRockTexture()
 
-    if (korriganFemale.animations.length > 0) {
-        mixer = new THREE.AnimationMixer(korriganFemale.scene)
-        korriganFemale.animations.forEach((clip) => {
-            actions.push(mixer.clipAction(clip))
-        })
-        actions[0].play()
-    }
-
-    korriganFemale.scene.traverse(function (node) {
+    chest.scene.traverse(function (node) {
         if (node.isMesh) { node.castShadow = true; }
     });
-
-    useFrame((state, delta) => {
-        mixer?.update(delta)
-    })
 
     return <group position={position}>
         <Text
@@ -130,8 +116,8 @@ export function BlockEnd({ position = [0, 0, 0] }) {
             </mesh>
         </RigidBody>
 
-        <RigidBody colliders="hull" position={[0, 0, 0]} restitution={0.2} friction={0}>
-            <primitive object={korriganFemale.scene} scale={1.05} position={[0, 0, 1]} />
+        <RigidBody colliders="hull" position={[0, 0, 0]} restitution={1} friction={50}>
+            <primitive object={chest.scene} scale={0.3} position={[0, 0, 0]} />
         </RigidBody>
     </group>
 }
@@ -164,12 +150,10 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
         </mesh>
 
         <RigidBody onContactForce={() => dead()} ref={obstacle} type="kinematicPosition" position={[0, 0.2, 0]} restitution={0.2} friction={0}>
-            <group>
-                <group rotation={[0, 0, 0]} scale={[2.4, 2.4, 2.4]}>
-                    <mesh geometry={nodes.Cube014.geometry} castShadow material={materials['Metal.074']} />
-                    <mesh geometry={nodes.Cube014_1.geometry} castShadow material={materials['BrownDark.039']} />
-                    <mesh geometry={nodes.Cube014_2.geometry} castShadow material={materials['Stone.012']} />
-                </group>
+            <group rotation={[0, 0, 0]} scale={[2.4, 2.4, 2.4]}>
+                <mesh geometry={nodes.Cube014.geometry} castShadow material={materials['Metal.074']} />
+                <mesh geometry={nodes.Cube014_1.geometry} castShadow material={materials['BrownDark.039']} />
+                <mesh geometry={nodes.Cube014_2.geometry} castShadow material={materials['Stone.012']} />
             </group>
         </RigidBody >
     </group >
@@ -202,18 +186,16 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
         </mesh>
 
         {
-            [...Array(blocksCount)].map((_, index) => <RigidBody colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+            [...Array(blocksCount)].map((_, index) => <RigidBody key={`arrow-${index}`} colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
                 <Arrow />
             </RigidBody>)
         }
 
         <RigidBody colliders="hull" onContactForce={() => dead()} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
-            <group>
-                <group rotation={[0, Math.PI / 2, Math.PI / 2,]} scale={[2.8, 2.8, 2.8]} position={[1, 0.378, 0]}>
-                    <mesh geometry={nodes.Cube4152.geometry} castShadow material={materials['Metal.092']} />
-                    <mesh geometry={nodes.Cube4152_1.geometry} castShadow material={materials['BrownDark.059']} />
-                    <mesh geometry={nodes.Cube4152_2.geometry} castShadow material={materials['Stone.025']} />
-                </group>
+            <group rotation={[0, Math.PI / 2, Math.PI / 2,]} scale={[2.8, 2.8, 2.8]} position={[1, 0.378, 0]}>
+                <mesh geometry={nodes.Cube4152.geometry} castShadow material={materials['Metal.092']} />
+                <mesh geometry={nodes.Cube4152_1.geometry} castShadow material={materials['BrownDark.059']} />
+                <mesh geometry={nodes.Cube4152_2.geometry} castShadow material={materials['Stone.025']} />
             </group>
         </RigidBody>
     </group>
@@ -266,7 +248,19 @@ function Bounds({ length = 1 }) {
     return <>
         <RigidBody type="fixed" restitution={0.2} friction={0}>
             <mesh
-                position={[2.15, 0.75, - (length * 2) + 2]}
+                position={[2.15, 0.30, - (length * 2) + 2]}
+                scale={[0.3, 1.5, 4 * length]}
+                castShadow
+                receiveShadow
+            >
+                <boxGeometry />
+                <meshStandardMaterial
+                    map={colorMap}
+                />
+            </mesh>
+
+            <mesh
+                position={[- 2.15, 0.30, - (length * 2) + 2]}
                 scale={[0.3, 1.5, 4 * length]}
                 receiveShadow
             >
@@ -277,18 +271,7 @@ function Bounds({ length = 1 }) {
             </mesh>
 
             <mesh
-                position={[- 2.15, 0.75, - (length * 2) + 2]}
-                scale={[0.3, 1.5, 4 * length]}
-                receiveShadow
-            >
-                <boxGeometry />
-                <meshStandardMaterial
-                    map={colorMap}
-                />
-            </mesh>
-
-            <mesh
-                position={[0, 0.75, - (length * 4) + 2]}
+                position={[0, 0.30, - (length * 4) + 2]}
                 scale={[4, 1.5, 0.3]}
                 receiveShadow
             >
@@ -312,7 +295,6 @@ function Bounds({ length = 1 }) {
 export function Level({
     count = 5,
     types = [BlockSpinner, BlockAxe, BlockLimbo],
-    seed = 0
 }) {
 
     const blocks = useMemo(() => {
@@ -324,7 +306,7 @@ export function Level({
         }
 
         return blocks
-    }, [count, types, seed])
+    }, [count, types])
 
     return <>
         <BlockStart position={[0, 0, 0]} />

@@ -23,21 +23,6 @@ body,
 }
 
 /**
- * Time
- */
-.time {
-    position: absolute;
-    top: 15%;
-    left: 0;
-    width: 100%;
-    color: #ffffff;
-    font-size: 6vh;
-    background: #00000033;
-    padding-top: 5px;
-    text-align: center;
-}
-
-/**
  * Restart
  */
 .restart {

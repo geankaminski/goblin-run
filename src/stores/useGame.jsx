@@ -6,14 +6,7 @@ export default create(subscribeWithSelector((set) => {
     return {
         blocksCount: 1,
         maxBlocks: 2,
-        blocksSeed: 0,
         lifes: 3,
-
-        /**
-         * Time
-         */
-        startTime: 0,
-        endTime: 0,
 
         music: new Audio('/audio/music.mp3'),
         winAudio: new Audio('/audio/win.mp3'),
@@ -28,7 +21,7 @@ export default create(subscribeWithSelector((set) => {
             set((state) => {
                 if (state.phase === 'ready') {
                     state.music.play()
-                    return { phase: 'playing', startTime: Date.now() }
+                    return { phase: 'playing' }
                 }
 
                 return {}
@@ -42,7 +35,7 @@ export default create(subscribeWithSelector((set) => {
                     if (state.lifes > 1) {
                         return { phase: 'ready', lifes: state.lifes - 1 }
                     } else {
-                        return { phase: 'ready', lifes: 3, blocksCount: 1, blocksSeed: Math.random() }
+                        return { phase: 'ready', lifes: 3, blocksCount: 1 }
                     }
                 }
 
@@ -54,9 +47,8 @@ export default create(subscribeWithSelector((set) => {
             set((state) => {
                 if (state.phase === 'playing' || state.phase === 'ended') {
                     state.hitAudio.play()
-                    return { phase: 'ready', blocksSeed: Math.random() }
+                    return { phase: 'ready' }
                 }
-
                 return {}
             })
         },
@@ -67,7 +59,7 @@ export default create(subscribeWithSelector((set) => {
                     state.music.pause()
                     state.music.currentTime = 0
                     state.winAudio.play()
-                    return { phase: 'ended', endTime: Date.now() }
+                    return { phase: 'ended' }
                 }
 
                 return {}

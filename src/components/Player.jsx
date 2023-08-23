@@ -4,7 +4,7 @@ import { useRapier, RigidBody } from '@react-three/rapier'
 import { useFrame, useLoader } from '@react-three/fiber'
 import { useKeyboardControls } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import useGame from './stores/useGame.jsx'
+import useGame from '../stores/useGame.jsx'
 
 export default function Player() {
     const body = useRef()
@@ -14,7 +14,7 @@ export default function Player() {
     let mixer
     let actions = []
     if (korrigan.animations.length > 0) {
-        // course_chapeau & pose_chapeau
+        // animations course_chapeau & pose_chapeau
         mixer = new THREE.AnimationMixer(korrigan.scene)
         korrigan.animations.forEach((clip) => {
             actions.push(mixer.clipAction(clip))
@@ -43,6 +43,8 @@ export default function Player() {
         const direction = { x: 0, y: - 1, z: 0 }
         const ray = new rapier.Ray(origin, direction)
         const hit = world.castRay(ray, 10, true)
+
+        body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
 
         if (hit.toi < 0.15) {
             body.current.applyImpulse({ x: 0, y: 0.35, z: 0 })
@@ -111,6 +113,7 @@ export default function Player() {
             const position = body.current.translation()
             position.z -= 0.05
             body.current.setTranslation(position)
+            body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
 
             primitive.current.rotation.y = 0
 
@@ -121,6 +124,7 @@ export default function Player() {
             const position = body.current.translation()
             position.x += 0.02
             body.current.setTranslation(position)
+            body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
 
             primitive.current.rotation.y = - Math.PI / 2
 
@@ -131,6 +135,7 @@ export default function Player() {
             const position = body.current.translation()
             position.z += 0.05
             body.current.setTranslation(position)
+            body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
 
             primitive.current.rotation.y = Math.PI
 
@@ -141,6 +146,7 @@ export default function Player() {
             const position = body.current.translation()
             position.x -= 0.02
             body.current.setTranslation(position)
+            body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
 
             primitive.current.rotation.y = Math.PI / 2
 
