@@ -60,7 +60,7 @@ export default function Interface() {
                     </svg>
 
                     <h1>How to play</h1>
-                    <p>Use the arrow or WASD keys to move</p>
+                    <p>Use the arrows or WASD keys to move</p>
                     <p>Use the space bar to jump</p>
                     <p>Don't fall into the void</p>
                     <p>And don't touch the enemies!</p>

@@ -250,8 +250,8 @@ function Bounds({ length = 1 }) {
     return <>
         <RigidBody type="fixed" restitution={0.2} friction={0}>
             <mesh
-                position={[2.15, 0.30, - (length * 2) + 2]}
-                scale={[0.3, 1.5, 4 * length]}
+                position={[2.15, 0.8, - (length * 2) + 2]}
+                scale={[0.3, 2, 4 * length]}
                 castShadow
                 receiveShadow
             >
@@ -262,8 +262,8 @@ function Bounds({ length = 1 }) {
             </mesh>
 
             <mesh
-                position={[- 2.15, 0.30, - (length * 2) + 2]}
-                scale={[0.3, 1.5, 4 * length]}
+                position={[- 2.15, 0.8, - (length * 2) + 2]}
+                scale={[0.3, 2, 4 * length]}
                 receiveShadow
             >
                 <boxGeometry />
@@ -273,8 +273,8 @@ function Bounds({ length = 1 }) {
             </mesh>
 
             <mesh
-                position={[0, 0.30, - (length * 4) + 2]}
-                scale={[4, 1.5, 0.3]}
+                position={[0, 0.8, - (length * 4) + 2]}
+                scale={[4, 2, 0.3]}
                 receiveShadow
             >
                 <boxGeometry />

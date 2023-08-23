@@ -1,8 +1,10 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
+import useGame from '../stores/useGame.jsx'
 
 export default function Lights() {
     const light = useRef()
+    const blocksCount = useGame((state) => state.blocksCount)
 
     useFrame((state) => {
         light.current.position.z = state.camera.position.z + 1 - 4
@@ -14,8 +16,8 @@ export default function Lights() {
         <directionalLight
             ref={light}
             castShadow
-            position={[5, 5, 1]}
-            intensity={0.9}
+            position={[5, 7 - blocksCount, 1]}
+            intensity={1 - blocksCount * 0.14}
             shadow-mapSize={[1024, 1024]}
             shadow-camera-near={1}
             shadow-camera-far={10}

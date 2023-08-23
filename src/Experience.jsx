@@ -10,7 +10,7 @@ export default function Experience() {
     const blocksCount = useGame((state) => state.blocksCount)
 
     return <>
-        <Sky distance={4500000} sunPosition={[0, 6, 0]} inclination={20} azimuth={0.25} />
+        <Sky distance={400} sunPosition={[2, 6, 4]} inclination={20} azimuth={0.10} turbidity={10 * blocksCount ** 2} />
         <Physics debug={false}>
             <Stars />
             <Lights />
