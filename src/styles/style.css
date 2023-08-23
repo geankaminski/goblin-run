@@ -71,6 +71,9 @@ body,
     background: #ffffff99;
 }
 
+/**
+ * Lifes counter
+ */
 .lifes {
     position: absolute;
     width: 100%;
@@ -81,6 +84,9 @@ body,
     gap: 6px;
 }
 
+/**
+ * Level counter
+ */
 .level {
     position: absolute;
     top: 16px;
@@ -90,4 +96,55 @@ body,
     gap: 6px;
     color: #ffffff;
     justify-content: flex-end;
+}
+
+/**
+ * Modal
+ */
+.modal-button {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 40px;
+    z-index: 2;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
+    background: #00000099;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.modal-content {
+    width: 80%;
+    max-width: 400px;
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    z-index: 2;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.modal-spacing {
+    margin-top: 32px;
 }

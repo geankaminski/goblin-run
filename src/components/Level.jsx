@@ -35,7 +35,7 @@ function useRockTexture() {
 
 export default function Arrow(props) {
     const { nodes, materials } = useGLTF('/models/arrow.gltf')
-    const [arrowX] = useState(() => Math.random() * 2 - 1)
+    const [arrowX] = useState(() => Math.random() * 4 - 2)
     const [arrowZ] = useState(() => Math.random() * 3 - 1)
     const [arrowYRotation] = useState(() => Math.random() * Math.PI * 2)
 
@@ -186,7 +186,7 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
         </mesh>
 
         {
-            [...Array(blocksCount)].map((_, index) => <RigidBody key={`arrow-${index}`} colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+            [...Array(blocksCount * 2)].map((_, index) => <RigidBody key={`arrow-dagger-${index}`} colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
                 <Arrow />
             </RigidBody>)
         }
@@ -208,8 +208,8 @@ export function BlockAxe({ position = [0, 0, 0] }) {
 
     const obstacle = useRef()
     const dead = useGame((state) => state.dead)
+    const blocksCount = useGame((state) => state.blocksCount)
     const [timeOffset] = useState(() => Math.random() * Math.PI * 5)
-
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime() * 3
@@ -227,9 +227,11 @@ export function BlockAxe({ position = [0, 0, 0] }) {
             />
         </mesh>
 
-        <RigidBody colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
-            <Arrow />
-        </RigidBody>
+        {
+            [...Array(blocksCount * 2)].map((_, index) => <RigidBody key={`arrow-shield-${index}`} colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+                <Arrow />
+            </RigidBody>)
+        }
 
         <RigidBody onContactForce={() => dead()} ref={obstacle} type="kinematicPosition" position={[0, 0, 0]} restitution={0.2} friction={0}>
             <group>

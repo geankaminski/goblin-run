@@ -5,7 +5,7 @@ export default create(subscribeWithSelector((set) => {
 
     return {
         blocksCount: 1,
-        maxBlocks: 2,
+        maxBlocks: 5,
         lifes: 3,
 
         music: new Audio('/audio/music.mp3'),

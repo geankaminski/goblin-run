@@ -36,9 +36,16 @@ export default function Player() {
     const end = useGame((state) => state.end)
     const dead = useGame((state) => state.dead)
     const blocksCount = useGame((state) => state.blocksCount)
+    const phase = useGame((state) => state.phase)
 
     const jump = () => {
         const origin = body.current.translation()
+
+        if (origin.y > 0.25) {
+            body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
+            return
+        }
+
         origin.y -= 0
         const direction = { x: 0, y: - 1, z: 0 }
         const ray = new rapier.Ray(origin, direction)
@@ -47,7 +54,7 @@ export default function Player() {
         body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
 
         if (hit.toi < 0.15) {
-            body.current.applyImpulse({ x: 0, y: 0.35, z: 0 })
+            body.current.applyImpulse({ x: 0, y: 0.1, z: 0 })
         }
     }
 
@@ -104,9 +111,13 @@ export default function Player() {
     useFrame((state, delta) => {
         mixer?.update(delta)
 
-        /**
-         * Controls
-         */
+        if (body.current.translation().z < - (blocksCount * 4) && phase === 'ended') {
+            body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
+            primitive.current.rotation.y = Math.PI
+            fadeToAction(1, 0.1)
+            return
+        }
+
         const { forward, backward, leftward, rightward } = getKeys()
 
         if (forward) {
@@ -195,11 +206,16 @@ export default function Player() {
         linearDamping={0.5}
         angularDamping={0.5}
         position={[0, 0, 0]}
+        colliders="hull"
         rotation={[0, Math.PI, 0]}
     >
         <primitive
             object={korrigan.scene}
             ref={primitive}
         />
+        <mesh position={[0, 0, 0]}>
+            <boxGeometry args={[0.2, 0.001, 0.2]} />
+            <meshBasicMaterial transparent opacity={0} />
+        </mesh>
     </RigidBody>
 }
