@@ -78,7 +78,7 @@ export default function Interface() {
                     </div>
 
                     <div className='modal-spacing'>
-                        <a href="https://github.com/geankaminski/goblin-race" target="_blank" rel="noreferrer">Github Repo</a>
+                        <a href="https://github.com/geankaminski/goblin-run" target="_blank" rel="noreferrer">Github Repo</a>
                     </div>
                 </div>
             </div>
