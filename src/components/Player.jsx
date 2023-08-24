@@ -145,7 +145,7 @@ export default function Player() {
             body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
             primitive.current.rotation.y = Math.PI
             fadeToAction(1, 0.1)
-            updateCamera(state, delta, 1.5)
+            updateCamera(state, delta, 1.4)
             return
         }
 

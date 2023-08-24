@@ -129,7 +129,7 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
 
     const obstacle = useRef()
     const dead = useGame((state) => state.dead)
-    const [speed] = useState(() => (2.5 * (Math.random() + 1)) * (Math.random() < 0.5 ? - 1 : 1))
+    const [speed] = useState(() => (2.2 * (Math.random() + 1)) * (Math.random() < 0.5 ? - 1 : 1))
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime()

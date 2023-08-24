@@ -62,8 +62,8 @@ export default function Interface() {
 
                     <p>Use the arrows or WASD keys to move</p>
                     <p>Use the space bar to jump</p>
-                    <p>Don't fall into the void</p>
                     <p>Don't touch the enemies</p>
+                    <p>For better experience, use a computer</p>
 
                     <div className='modal-spacing'>
                         <p>
@@ -90,37 +90,40 @@ export default function Interface() {
 
         {
             !modal && <div className="controls">
-                <div className="raw">
-                    <div
-                        className={`key ${forward ? 'active' : ''}`}
-                        onTouchStart={() => handleTouch('forward', true)}
-                        onTouchEnd={() => handleTouch('forward', false)}
-                    ></div>
+                <div>
+                    <div className="raw">
+                        <div
+                            className={`key ${forward ? 'active' : ''}`}
+                            onTouchStart={() => handleTouch('forward', true)}
+                            onTouchEnd={() => handleTouch('forward', false)}
+                        ></div>
+                    </div>
+                    <div className="raw">
+                        <div
+                            className={`key ${leftward ? 'active' : ''}`}
+                            onTouchStart={() => handleTouch('leftward', true)}
+                            onTouchEnd={() => handleTouch('leftward', false)}
+                        ></div>
+                        <div
+                            className={`key ${rightward ? 'active' : ''}`}
+                            onTouchStart={() => handleTouch('rightward', true)}
+                            onTouchEnd={() => handleTouch('rightward', false)}
+                        ></div>
+                    </div>
+                    <div className="raw">
+                        <div
+                            className={`key ${backward ? 'active' : ''}`}
+                            onTouchStart={() => handleTouch('backward', true)}
+                            onTouchEnd={() => handleTouch('backward', false)}
+                        ></div>
+                    </div>
                 </div>
-                <div className="raw">
-                    <div
-                        className={`key ${leftward ? 'active' : ''}`}
-                        onTouchStart={() => handleTouch('leftward', true)}
-                        onTouchEnd={() => handleTouch('leftward', false)}
-                    ></div>
-                    <div
-                        className={`key ${backward ? 'active' : ''}`}
-                        onTouchStart={() => handleTouch('backward', true)}
-                        onTouchEnd={() => handleTouch('backward', false)}
-                    ></div>
-                    <div
-                        className={`key ${rightward ? 'active' : ''}`}
-                        onTouchStart={() => handleTouch('rightward', true)}
-                        onTouchEnd={() => handleTouch('rightward', false)}
-                    ></div>
-                </div>
-                <div className="raw">
-                    <div
-                        className={`key large ${jump ? 'active' : ''}`}
-                        onTouchStart={() => handleTouch('jump', true)}
-                        onTouchEnd={() => handleTouch('jump', false)}
-                    ></div>
-                </div>
+
+                <div
+                    className={`key ${jump ? 'active' : ''}`}
+                    onTouchStart={() => handleTouch('jump', true)}
+                    onTouchEnd={() => handleTouch('jump', false)}
+                ></div>
             </div>
         }
     </div>

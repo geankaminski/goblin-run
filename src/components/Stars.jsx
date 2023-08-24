@@ -9,7 +9,7 @@ export default function Model() {
     const maxBlocks = useGame((state) => state.maxBlocks)
     const phase = useGame(state => state.phase)
 
-    return (phase === 'ended' && blocksCount === maxBlocks && Array.from({ length: 300 }, (_, i) =>
+    return (phase === 'ended' && blocksCount === maxBlocks && Array.from({ length: 400 }, (_, i) =>
         <RigidBody key={i} type="Dynamic"
             position={[Math.random() * 4 - 2, 3, - (blocksCount + 1) * 4]} scale={[0.1, 0.1, 0.1]}
         >

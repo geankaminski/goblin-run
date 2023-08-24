@@ -20,6 +20,7 @@ body,
     height: 100%;
     pointer-events: none;
     font-family: 'Bebas Neue', cursive;
+    user-select: none;
 }
 
 /**
@@ -48,28 +49,34 @@ body,
     bottom: 10%;
     left: 0;
     width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .controls .raw {
     display: flex;
     justify-content: center;
+    gap: 52px;
 }
 
 .controls .key {
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
     margin: 4px;
     border: 2px solid #ffffff;
     background: #ffffff44;
     pointer-events: auto;
 }
 
-.controls .key.large {
-    width: 144px;
-}
-
 .controls .key.active {
     background: #ffffff99;
+}
+
+@media screen and (min-width: 768px) {
+    .controls {
+        display: none;
+    }
 }
 
 /**
@@ -107,7 +114,6 @@ body,
     bottom: 16px;
     right: 16px;
     width: 40px;
-    z-index: 2;
     cursor: pointer;
     pointer-events: auto;
 }
