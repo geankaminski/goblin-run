@@ -61,6 +61,7 @@ body,
     margin: 4px;
     border: 2px solid #ffffff;
     background: #ffffff44;
+    pointer-events: auto;
 }
 
 .controls .key.large {
@@ -79,7 +80,7 @@ body,
     width: 100%;
     top: 16px;
     right: -16px;
-    font-size: 3.5vh;
+    font-size: 4vh;
     display: flex;
     gap: 6px;
 }
@@ -136,15 +137,30 @@ body,
 }
 
 .close-button {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 40px;
-    z-index: 2;
+    width: 100%;
     cursor: pointer;
     pointer-events: auto;
+    border: none;
+    background: #24BA56;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 16px;
+    border-radius: 2px;
+    z-index: 100;
+    padding: 4px 0;
+}
+
+.close-button:hover {
+    background: #1E9C4A;
+}
+
+.close-button:disabled {
+    background: #ccc;
+    color: #fff;
+    cursor: not-allowed;
 }
 
 .modal-spacing {
-    margin-top: 32px;
+    margin-top: 24px;
 }

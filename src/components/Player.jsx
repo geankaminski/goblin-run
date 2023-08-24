@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useRapier, RigidBody } from '@react-three/rapier'
 import { useFrame, useLoader } from '@react-three/fiber'
-import { useKeyboardControls } from '@react-three/drei'
+import useControls from '../stores/useControls.jsx'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import useGame from '../stores/useGame.jsx'
 
@@ -26,7 +26,6 @@ export default function Player() {
         if (node.isMesh) { node.castShadow = true; }
     });
 
-    const [subscribeKeys, getKeys] = useKeyboardControls()
     const { rapier, world } = useRapier()
 
     const [smoothedCameraPosition] = useState(() => new THREE.Vector3(10, 10, 10))
@@ -37,6 +36,7 @@ export default function Player() {
     const dead = useGame((state) => state.dead)
     const blocksCount = useGame((state) => state.blocksCount)
     const phase = useGame((state) => state.phase)
+    const handleKey = useControls((state) => state.handleKey)
 
     const jump = () => {
         const origin = body.current.translation()
@@ -54,7 +54,7 @@ export default function Player() {
         body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
 
         if (hit.toi < 0.15) {
-            body.current.applyImpulse({ x: 0, y: 0.1, z: 0 })
+            body.current.applyImpulse({ x: 0, y: 0.078, z: 0 })
         }
     }
 
@@ -79,6 +79,9 @@ export default function Player() {
     }
 
     useEffect(() => {
+        window.addEventListener('keydown', (e) => handleKey(e, true))
+        window.addEventListener('keyup', (e) => handleKey(e, false))
+
         const unsubscribeReset = useGame.subscribe(
             (state) => state.phase,
             (value) => {
@@ -87,7 +90,7 @@ export default function Player() {
             }
         )
 
-        const unsubscribeJump = subscribeKeys(
+        const unsubscribeJump = useControls.subscribe(
             (state) => state.jump,
             (value) => {
                 if (value)
@@ -95,9 +98,17 @@ export default function Player() {
             }
         )
 
-        const unsubscribeAny = subscribeKeys(
-            () => {
-                start()
+        const unsubscribeAny = useControls.subscribe(
+            (state) => state,
+            (value) => {
+                if (
+                    value.forward ||
+                    value.backward ||
+                    value.leftward ||
+                    value.rightward ||
+                    value.jump
+                )
+                    start()
             }
         )
 
@@ -108,6 +119,25 @@ export default function Player() {
         }
     }, [])
 
+    const updateCamera = (state, delta, z) => {
+        const bodyPosition = body.current.translation()
+
+        const cameraPosition = new THREE.Vector3()
+        cameraPosition.copy(bodyPosition)
+        cameraPosition.z += z
+        cameraPosition.y += 0.65
+
+        const cameraTarget = new THREE.Vector3()
+        cameraTarget.copy(bodyPosition)
+        cameraTarget.y += 0.25
+
+        smoothedCameraPosition.lerp(cameraPosition, 5 * delta)
+        smoothedCameraTarget.lerp(cameraTarget, 5 * delta)
+
+        state.camera.position.copy(smoothedCameraPosition)
+        state.camera.lookAt(smoothedCameraTarget)
+    }
+
     useFrame((state, delta) => {
         mixer?.update(delta)
 
@@ -115,10 +145,11 @@ export default function Player() {
             body.current.setRotation({ x: 0, y: 1, z: 0, w: 0 })
             primitive.current.rotation.y = Math.PI
             fadeToAction(1, 0.1)
+            updateCamera(state, delta, 1.5)
             return
         }
 
-        const { forward, backward, leftward, rightward } = getKeys()
+        const { forward, backward, leftward, rightward } = useControls.getState()
 
         if (forward) {
             const position = body.current.translation()
@@ -171,23 +202,9 @@ export default function Player() {
         /**
          * Camera
          */
+        updateCamera(state, delta, 2.25)
+
         const bodyPosition = body.current.translation()
-
-        const cameraPosition = new THREE.Vector3()
-        cameraPosition.copy(bodyPosition)
-        cameraPosition.z += 2.25
-        cameraPosition.y += 0.65
-
-        const cameraTarget = new THREE.Vector3()
-        cameraTarget.copy(bodyPosition)
-        cameraTarget.y += 0.25
-
-        smoothedCameraPosition.lerp(cameraPosition, 5 * delta)
-        smoothedCameraTarget.lerp(cameraTarget, 5 * delta)
-
-        state.camera.position.copy(smoothedCameraPosition)
-        state.camera.lookAt(smoothedCameraTarget)
-
         /**
         * Phases
         */
@@ -214,7 +231,7 @@ export default function Player() {
             ref={primitive}
         />
         <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[0.3, 0.001, 0.3]} />
+            <boxGeometry args={[0.4, 0.002, 0.4]} />
             <meshBasicMaterial transparent opacity={0} />
         </mesh>
     </RigidBody>

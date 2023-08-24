@@ -2,11 +2,11 @@ import { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei'
-// import { Perf } from 'r3f-perf'
 import Experience from './Experience.jsx'
 import Interface from './components/Interface.jsx'
-// import Loader from './components/Loader.jsx'
 import '/styles/style.css'
+
+// import { Perf } from 'r3f-perf'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 
@@ -30,7 +30,7 @@ root.render(
             }}
         >
             {/* <Perf /> */}
-            <Suspense /* fallback={<Loader />} */>
+            <Suspense>
                 <Experience />
             </Suspense>
         </Canvas>

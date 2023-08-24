@@ -63,7 +63,7 @@ export function BlockStart({ position = [0, 0, 0] }) {
         <Float floatIntensity={0.25} rotationIntensity={0.25}>
             <Text
                 font="/fonts/bebas-neue-v9-latin-regular.woff"
-                scale={0.5}
+                scale={0.4}
                 maxWidth={0.25}
                 lineHeight={0.75}
                 textAlign="right"
@@ -100,11 +100,11 @@ export function BlockEnd({ position = [0, 0, 0] }) {
     return <group position={position}>
         <Text
             font="/fonts/bebas-neue-v9-latin-regular.woff"
-            scale={1}
+            scale={0.4}
             position={[0, 2.25, 2]}
         >
             FINISH
-            <meshBasicMaterial toneMapped={false} />
+            <meshBasicMaterial toneMapped={false} color={'#ff00ff'} />
         </Text>
 
         <RigidBody type="fixed" colliders="hull" position={[0, 0, 0]} restitution={0.2} friction={0}>
@@ -117,7 +117,7 @@ export function BlockEnd({ position = [0, 0, 0] }) {
         </RigidBody>
 
         <RigidBody colliders="hull" position={[0, 0, 0]} restitution={1} friction={50}>
-            <primitive object={chest.scene} scale={0.3} position={[0, 0, 0]} />
+            <primitive object={chest.scene} scale={0.5} position={[0, 0, 0]} />
         </RigidBody>
     </group>
 }
@@ -133,7 +133,6 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime()
-
         const rotation = new THREE.Quaternion()
         rotation.setFromEuler(new THREE.Euler(0, time * speed, 0))
         obstacle.current.setNextKinematicRotation(rotation)
@@ -186,13 +185,13 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
         </mesh>
 
         {
-            [...Array(blocksCount * 2)].map((_, index) => <RigidBody key={`arrow-dagger-${index}`} colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
+            [...Array(blocksCount * 3)].map((_, index) => <RigidBody key={`arrow-dagger-${index}`} colliders="hull" onContactForce={() => dead()} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
                 <Arrow />
             </RigidBody>)
         }
 
         <RigidBody colliders="hull" onContactForce={() => dead()} ref={obstacle} type="kinematicPosition" position={[0, 0.3, 0]} restitution={0.2} friction={0}>
-            <group rotation={[0, Math.PI / 2, Math.PI / 2,]} scale={[2.8, 2.8, 2.8]} position={[1, 0.378, 0]}>
+            <group rotation={[0, Math.PI / 2, Math.PI / 2,]} scale={[2.9, 2.9, 2.9]} position={[1, 0.4, 0]}>
                 <mesh geometry={nodes.Cube4152.geometry} castShadow material={materials['Metal.092']} />
                 <mesh geometry={nodes.Cube4152_1.geometry} castShadow material={materials['BrownDark.059']} />
                 <mesh geometry={nodes.Cube4152_2.geometry} castShadow material={materials['Stone.025']} />
@@ -208,6 +207,7 @@ export function BlockAxe({ position = [0, 0, 0] }) {
 
     const obstacle = useRef()
     const dead = useGame((state) => state.dead)
+    const phase = useGame((state) => state.phase)
     const blocksCount = useGame((state) => state.blocksCount)
     const [timeOffset] = useState(() => Math.random() * Math.PI * 5)
 

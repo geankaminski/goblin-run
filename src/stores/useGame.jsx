@@ -46,7 +46,6 @@ export default create(subscribeWithSelector((set) => {
         restart: () => {
             set((state) => {
                 if (state.phase === 'playing' || state.phase === 'ended') {
-                    state.hitAudio.play()
                     return { phase: 'ready' }
                 }
                 return {}
