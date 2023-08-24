@@ -214,7 +214,7 @@ export default function Player() {
             ref={primitive}
         />
         <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[0.2, 0.001, 0.2]} />
+            <boxGeometry args={[0.3, 0.001, 0.3]} />
             <meshBasicMaterial transparent opacity={0} />
         </mesh>
     </RigidBody>

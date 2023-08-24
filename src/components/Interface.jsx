@@ -28,6 +28,24 @@ export default function Interface() {
         }
     }
 
+    const handleTouchStart = (event, key) => {
+        event.preventDefault();
+        if (key === 'forward') useKeyboardControls.setState({ forward: true });
+        else if (key === 'backward') useKeyboardControls.setState({ backward: true });
+        else if (key === 'leftward') useKeyboardControls.setState({ leftward: true });
+        else if (key === 'rightward') useKeyboardControls.setState({ rightward: true });
+        else if (key === 'jump') useKeyboardControls.setState({ jump: true });
+    };
+
+    const handleTouchEnd = (event, key) => {
+        event.preventDefault();
+        if (key === 'forward') useKeyboardControls.setState({ forward: false });
+        else if (key === 'backward') useKeyboardControls.setState({ backward: false });
+        else if (key === 'leftward') useKeyboardControls.setState({ leftward: false });
+        else if (key === 'rightward') useKeyboardControls.setState({ rightward: false });
+        else if (key === 'jump') useKeyboardControls.setState({ jump: false });
+    };
+
     return <div className="interface">
         {phase === 'ended' && <div className="restart" onClick={handleRestart()}>
             {
@@ -86,15 +104,35 @@ export default function Interface() {
 
         <div className="controls">
             <div className="raw">
-                <div className={`key ${forward ? 'active' : ''}`}></div>
+                <div
+                    className={`key ${forward ? 'active' : ''}`}
+                    onTouchStart={(e) => handleTouchStart(e, 'forward')}
+                    onTouchEnd={(e) => handleTouchEnd(e, 'forward')}
+                ></div>
             </div>
             <div className="raw">
-                <div className={`key ${leftward ? 'active' : ''}`}></div>
-                <div className={`key ${backward ? 'active' : ''}`}></div>
-                <div className={`key ${rightward ? 'active' : ''}`}></div>
+                <div
+                    className={`key ${leftward ? 'active' : ''}`}
+                    onTouchStart={(e) => handleTouchStart(e, 'leftward')}
+                    onTouchEnd={(e) => handleTouchEnd(e, 'leftward')}
+                ></div>
+                <div
+                    className={`key ${backward ? 'active' : ''}`}
+                    onTouchStart={(e) => handleTouchStart(e, 'backward')}
+                    onTouchEnd={(e) => handleTouchEnd(e, 'backward')}
+                ></div>
+                <div
+                    className={`key ${rightward ? 'active' : ''}`}
+                    onTouchStart={(e) => handleTouchStart(e, 'rightward')}
+                    onTouchEnd={(e) => handleTouchEnd(e, 'rightward')}
+                ></div>
             </div>
             <div className="raw">
-                <div className={`key large ${jump ? 'active' : ''}`}></div>
+                <div
+                    className={`key large ${jump ? 'active' : ''}`}
+                    onTouchStart={(e) => handleTouchStart(e, 'jump')}
+                    onTouchEnd={(e) => handleTouchEnd(e, 'jump')}
+                ></div>
             </div>
         </div>
     </div>
